@@ -177,10 +177,52 @@ var cancelReceipt = (req, res) => {
     });
 };
 
+var checkStock = (req, res) => {
+    let request = {
+        userID: req.decoded.userID
+    };
+    mReceipt.checkStock(request, (err, response) => {
+        let status = {},
+            data = {};
+            
+        if (!err && response) {
+            if (response.errors) {
+                status = {
+                    'code': '0',
+                    'message': response.errors
+                }
+                res.json({
+                    status: status
+                });
+
+            } else {
+                status = {
+                    'code': '1',
+                    'err': ''
+                }
+                data = response;
+                res.json({
+                    body: data,
+                    status: status
+                });
+            }
+        } else {
+            status = {
+                'code': '0',
+                'message': err
+            }
+            res.json({
+                status: status
+            });
+        }
+    });
+};
+
 exports = module.exports = {
     getReceipt: getReceipt,
     getListOfReceipts: getListOfReceipts,
     addReceipt: addReceipt,
     finishReceipt: finishReceipt,
-    cancelReceipt: cancelReceipt
+    cancelReceipt: cancelReceipt,
+    checkStock: checkStock
 }

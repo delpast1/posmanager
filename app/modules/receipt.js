@@ -224,10 +224,45 @@ var increaseAmountOfVariation = async (product) => {
     });
 };
 
+var checkStock = (request, callback) => {
+    let cb = callback || noop,
+        req = request || {};
+    
+    let errors = [];
+    let reponse = [];
+    Product.find({'userID': req.userID}, (err, products) => {
+        if (err) return cb(err);
+        for(let i=0; i < products.length; i++) {
+            let variations = [];
+            for(let j=0; j < products[i].variations.length; j++) {
+                if (products[i].variations[j].numberOfUnits < 3) {
+                    let variation = {
+                        variationID: products[i].variations[j]._id,
+                        size: products[i].variations[j].size,
+                        color: products[i].variations[j].color,
+                        numberOfUnits: products[i].variations[j].numberOfUnits
+                    };
+                    variations.push(variation);
+                }
+            }
+            if (variations.length > 0) {
+                let product = {
+                    productID: products[i]._id,
+                    variations: variations
+                };
+                reponse.push(product);
+            }
+        }
+
+        return cb(null, reponse);
+    });
+};
+
 exports = module.exports = {
     getReceipt: getReceipt,
     getListOfReceipts: getListOfReceipts,
     addReceipt: addReceipt,
     finishReceipt: finishReceipt,
-    cancelReceipt: cancelReceipt
+    cancelReceipt: cancelReceipt,
+    checkStock: checkStock
 }

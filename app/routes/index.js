@@ -68,6 +68,7 @@ router.post('/receipt/get-list-of-receipts', [requireSession, controllers.receip
 router.post('/receipt/add', [requireSession, controllers.receipt.addReceipt]);
 router.post('/receipt/finish', [requireSession, controllers.receipt.finishReceipt]);
 router.post('/receipt/cancel', [requireSession, controllers.receipt.cancelReceipt]);
+router.post('/receipt/check-stock', [requireSession, controllers.receipt.checkStock]);
 
 /* REPORT router*/
 router.post('/report/general-report', [requireSession, controllers.report.generalReport]);
