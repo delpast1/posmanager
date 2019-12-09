@@ -1,0 +1,82 @@
+<h1>Danh sách sản phẩm</h1>
+<div class="container dashboard-content">
+    <form action="/admin/unit/all-units/" method="GET">
+        <div class="input-group">
+            <input type="text" class="form-control" name="unitSearch" placeholder="Search">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-default">Go!</button>
+            </span>
+        </div>
+    </form>
+    <div class="row content-table">
+        <table class="table table-striped table-primary">
+            <thead>
+                <tr>
+                    <th class="col-sm-3"></th>
+                    <th class="col-sm-2">Tên đơn vị</th>
+                    <th class="col-sm-2">Ký hiệu</th>
+                    <th class="col-sm-2"></th>
+                    <th class="col-sm-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    if (units.length > 0 ) {
+                        for(var i=0; i < units.length; i++ )  {
+                %>
+                <tr>
+                    <td class="col-sm-3"></td>
+                    <td class="col-sm-2"><%= units[i].name %></td>
+                    <td class="col-sm-2"><%= units[i].symbol %></td>
+                    <td class="col-sm-2"><a href="/admin/unit/get-unit/<%= units[i]._id %>" class="btn btn-info">Xem</a></td>
+                    <td class="col-sm-3"></td>
+                </tr>                
+                <%}}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-table">
+    <% if (pages > 1) {%>
+        <ul class="pagination text-center">
+            <% if (Number(current) === 1) { %>
+                <li class="active"><a>1</a></li>
+            <% } else { %>
+                <li><a href="/admin/unit/all-units/1">1</a></li>
+            <% } %>
+            <% var x = (Number(current) > 5 ? Number(current) - 2 : 2) %>
+            <% if (Number(current) > 3) { %>
+                <li class="disabled"><a>...</a></li>
+                <% for (x=x+1; x <= (Number(current) + 1) && x < pages; x++) { %>
+                    <% if (x === Number(current)) { %>
+                        <li class="active"><a href="/admin/unit/all-units/<%= x %>"><%= x %></a></li>
+                    <% } else { %>    
+                        <li><a href="/admin/unit/all-units/<%= x %>"><%= x %></a></li>
+                    <% } %>
+                    <% if (x === Number(current) + 1 && x < pages) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                <% } %>
+            <% }  else { %>
+                <% for (; x <= (Number(current) + 1) && x < pages; x++) { %>
+                    <% if (x === Number(current)) { %>
+                        <li class="active"><a href="/admin/unit/all-units/<%= x %>"><%= x %></a></li>
+                    <% } else { %>    
+                        <li><a href="/admin/unit/all-units/<%= x %>"><%= x %></a></li>
+                    <% } %>
+                    <% if (x === Number(current) + 1 && x < pages && pages > 3) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                <% } %>
+            <% } %>
+
+            <% if (Number(current) === pages) { %>
+                <li class="active"><a><%= pages %></a></li>
+            <% } else { %>
+                <li><a href="/admin/unit/all-units/<%= pages %>"><%= pages %></a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>

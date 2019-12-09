@@ -1,0 +1,113 @@
+
+<div class="container dashboard-content" >
+        <form action="/admin/partner/update-partner/" method="POST" class="form-default" role="form">
+            <div class="form-group col-sm-12">
+                <label class="label label-default" for="_id">_id</label>
+                <input type="text" class="form-control" name="_id" value="<%= partner._id %>" readonly>
+            </div>
+            <div class="col-sm-12">
+                <label class="label label-default">Thông tin cơ bản</label>
+                <table>
+                    <tr>
+                        <td class="col-sm-4">
+                            <label class="label label-default" for="fullname">Tên khách hàng</label>
+                            <input type="text" class="form-control" name="fullname" value="<%= partner.info.fullname %>" >
+                        </td>
+                        <td class="col-sm-4">
+                            <label class="label label-default" for="phone">Số điện thoại</label>
+                            <input type="text" class="form-control" name="phone" value="<%= partner.info.phone %>" >
+                        </td>
+                        <td class="col-sm-4">
+                            <label class="label label-default" for="address">Địa chỉ</label>
+                            <input type="text" class="form-control" name="address" value="<%= partner.info.address %>" >
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-12">
+                    <label class="label label-default">Thông tin thêm</label>
+                <table>
+                    <tr>
+                        <td class="col-sm-3">
+                            <label class="label label-default" for="email">Email</label>
+                            <input type="text" class="form-control" name="email" value="<%= partner.additionalInfo.email %>" >
+                        </td>
+                        <td class="col-sm-3">
+                            <label class="label label-default" for="birthdate">Ngày sinh</label>
+                            <input type="text" class="form-control" name="birthdate" value="<%= partner.additionalInfo.birthdate %>" >
+                        </td>
+                        <td class="col-sm-3">
+                            <label class="label label-default" for="cmnd">Chứng minh nhân dân</label>
+                            <input type="text" class="form-control" name="cmnd" value="<%= partner.additionalInfo.cmnd %>" >
+                        </td>
+                        <td class="col-sm-3">
+                            <label class="label label-default" for="gender">Giới tính</label>
+                            <select class="form-control" name="gender">
+                                <% if (partner.additionalInfo.gender === 'MALE') { %>
+                                    <option selected>MALE</option>
+                                    <option>FEMALE</option>
+                                    <option>OTHER</option>
+                                <% } else if (partner.additionalInfo.gender === 'FEMALE') {%>
+                                    <option>MALE</option>
+                                    <option selected>FEMALE</option>
+                                    <option>OTHER</option>
+                                <% } else { %>
+                                    <option>MALE</option>
+                                    <option>FEMALE</option>
+                                    <option selected>OTHER</option>
+                                <% } %>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-4">
+                <label class="label label-default" for="classify">Loại đối tác</label>
+                <select class="form-control" name="classify">
+                    <% if (partner.classify === 'CUSTOMER') { %>
+                        <option selected>CUSTOMER</option>
+                        <option>SUPPLIER</option>
+                        <option>SHIPPER</option>
+                    <% } else if (partner.classify === 'SUPPLIER') {%>
+                        <option>CUSTOMER</option>
+                        <option selected>SUPPLIER</option>
+                        <option>SHIPPER</option>
+                    <% } else { %>
+                        <option>CUSTOMER</option>
+                        <option>SUPPLIER</option>
+                        <option selected>SHIPPER</option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-sm-2">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+            <div class="form-group col-sm-2">
+                <a href="/admin/partner/delete-partner/<%= partner._id %>" class="btn btn-warning">Xóa</a>
+            </div>
+    </form>
+</div>
+
+<% if (errors.length > 0) { %>
+    <div class="modal show" id="partnerModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick = "$('#partnerModal').removeClass('show').addClass('fade');">&times;</button>
+                <h4 class="modal-title">Validate!!!</h4>
+            </div>
+            <div class="modal-body">
+                <% for(let i=0; i < errors.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= errors[i] %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="modal-footer">        
+            </div>
+        </div>
+    </div>
+<% } %>
+
+    

@@ -1,0 +1,38 @@
+<!-- <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
+                POS Application Magenement
+            </a>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="/admin/logout">Logout</a></li>
+        </ul>
+
+    </div>
+</nav> -->
+
+<div class="w3-sidebar w3-bar-block" >
+    <a href="/admin/all-users" class="w3-bar-item w3-button w3-border-bottom w3-border-top"> Danh sách người dùng</a>
+    <a class="w3-bar-item w3-button w3-border-bottom" data-toggle="collapse" href="#collapse-usermanager" aria-expanded="false" aria-controls="collapseExample">
+            Quản lý</a>
+        <ul class="collapse w3-ul" id="collapse-usermanager">
+            <li><a href="/admin/user/general-info" class="w3-bar-item w3-button">Thông tin chung</a></li>
+            <!-- <li><a href="/admin/unit/all-units/" class="w3-bar-item w3-button ">Đơn vị tính</a></li> -->
+            <li><a href="/admin/product/all-products/" class="w3-bar-item w3-button ">Sản phẩm</a></li>
+            <li><a href="/admin/order/all-orders/" class="w3-bar-item w3-button ">Đơn hàng</a></li>
+            <li><a href="/admin/receipt/all-receipts/" class="w3-bar-item w3-button ">Đơn nhập hàng</a></li>
+            <li><a href="/admin/partner/all-partners/" class="w3-bar-item w3-button ">Đối tác</a></li>
+        </ul>
+    <a class="w3-bar-item w3-button w3-border-bottom w3-border-top" data-toggle="collapse" href="#collapse-report" aria-expanded="false" aria-controls="collapseExample">
+            Báo cáo thống kê</a>
+        <ul class="collapse w3-ul" id="collapse-report">
+            <li><a href="#" class="w3-bar-item w3-button">Sản phẩm bán chạy</a></li>
+            <li><a href="#" class="w3-bar-item w3-button">Đơn vị vận chuyển</a></li>
+        </ul>
+</div>

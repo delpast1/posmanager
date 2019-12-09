@@ -1,0 +1,110 @@
+<h1>Danh sách đơn hàng</h1>
+<div class="container dashboard-content">
+    <form action="/admin/receipt/all-receipts/" method="GET">
+        <div class="col-sm-5">
+            <input type="text" class="form-control" name="receiptSearch" placeholder="Nhập id của đơn nhập hàng">
+        </div>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" name="supplierSearch" placeholder="Nhập id của nhà cung cấp">
+        </div>
+        <span class="input-group-btn col-sm-2">
+            <button type="submit" class="btn btn-default">Go!</button>
+        </span>
+    </form>
+    <div class="row content-table">
+        <table class="table table-striped table-primary">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">Ngày</th>
+                    <th class="col-sm-2">ID đơn nhập hàng</th>
+                    <th class="col-sm-2">ID Nhà cung cấp</th>
+                    <th class="col-sm-1">Tổng tiền</th>
+                    <th class="col-sm-1">Trạng thái</th>
+                    <th class="col-sm-2"></th>
+                    <th class="col-sm-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    if (receipts.length > 0 ) {
+                        for(var i=0; i < receipts.length; i++ )  {
+                %>
+                <tr>
+                    <td class="col-sm-2"><%= receipts[i].createdAt %></td>
+                    <td class="col-sm-2"><%= receipts[i]._id %></td>
+                    <td class="col-sm-2"><%= receipts[i].supplierID %></td>
+                    <td class="col-sm-1"><%= receipts[i].totalPrice %></td>
+                    <td class="col-sm-1"><%= receipts[i].status %></td>
+                    <td class="col-sm-2"><a href="/admin/receipt/get-receipt/<%= receipts[i]._id %>" class="btn btn-info">Xem</a></td>
+                    <td class="col-sm-2"></td>
+                </tr>
+                <%}}%>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-table">
+    <% if (pages > 1) {%>
+        <ul class="pagination text-center">
+            <% if (Number(current) === 1) { %>
+                <li class="active"><a>1</a></li>
+            <% } else { %>
+                <li><a href="/admin/receipt/all-receipts/1">1</a></li>
+            <% } %>
+            <% var x = (Number(current) > 5 ? Number(current) - 2 : 2) %>
+            <% if (Number(current) > 3) { %>
+                <li class="disabled"><a>...</a></li>
+                <% for (x=x+1; x <= (Number(current) + 1) && x < pages; x++) { %>
+                    <% if (x === Number(current)) { %>
+                        <li class="active"><a href="/admin/receipt/all-receipts/<%= x %>"><%= x %></a></li>
+                    <% } else { %>    
+                        <li><a href="/admin/receipt/all-receipts/<%= x %>"><%= x %></a></li>
+                    <% } %>
+                    <% if (x === Number(current) + 1 && x < pages) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                <% } %>
+            <% }  else { %>
+                <% for (; x <= (Number(current) + 1) && x < pages; x++) { %>
+                    <% if (x === Number(current)) { %>
+                        <li class="active"><a href="/admin/receipt/all-receipts/<%= x %>"><%= x %></a></li>
+                    <% } else { %>    
+                        <li><a href="/admin/receipt/all-receipts/<%= x %>"><%= x %></a></li>
+                    <% } %>
+                    <% if (x === Number(current) + 1 && x < pages && pages > 3) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                <% } %>
+            <% } %>
+
+            <% if (Number(current) === pages) { %>
+                <li class="active"><a><%= pages %></a></li>
+            <% } else { %>
+                <li><a href="/admin/receipt/all-receipts/<%= pages %>"><%= pages %></a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
+
+<% if (errors.length > 0) { %>
+    <div class="modal show" id="receiptModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick = "$('#receiptModal').removeClass('show').addClass('fade');">&times;</button>
+                <h4 class="modal-title">Validate!!!</h4>
+            </div>
+            <div class="modal-body">
+                <% for(let i=0; i < errors.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= errors[i] %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="modal-footer">        
+            </div>
+        </div>
+    </div>
+<% } %>

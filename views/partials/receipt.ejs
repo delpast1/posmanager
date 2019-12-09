@@ -1,0 +1,79 @@
+
+<div class="container dashboard-content" >
+        <form action="/admin/receipt/update-receipt/" method="POST" class="form-default" role="form">
+            <div class="form-group col-sm-6">
+                <label class="label label-default" for="_id">_id</label>
+                <input type="text" class="form-control" name="_id" value="<%= receipt._id %>" readonly>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="label label-default" for="supplierID">_id</label>
+                <input type="text" class="form-control" name="supplierID" value="<%= receipt.supplierID %>" readonly>
+            </div>
+            <div class="col-sm-12">
+                <label class="label label-default">Sản phẩm</label>
+                <table>
+                    <tr>
+                        <th>ID sản phẩm</th>
+                        <th>ID biến thể</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                    </tr>
+                    <% for (let i=0; i < receipt.products.length; i++) { %>
+                    <tr>
+                        <td class="col-sm-3">
+                            <input type="text" class="form-control" value="<%= receipt.products[i].productID %>" readonly>
+                        </td>
+                        <td class="col-sm-3">
+                            <input type="text" class="form-control" value="<%= receipt.products[i].variationID %>" readonly>
+                        </td>
+                        <td class="col-sm-3">
+                            <input type="text" class="form-control" value="<%= receipt.products[i].amount %>" readonly>
+                        </td>
+                        <td class="col-sm-3">
+                            <input type="text" class="form-control" value="<%= receipt.products[i].price %>" readonly>
+                        </td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="label label-default" for="deliveryFee">Giá vận chuyển</label>
+                <input type="text" class="form-control" name="deliveryFee" value="<%= receipt.deliveryFee %>" >
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="label label-default" for="totalPrice">Tổng tiền</label>
+                <input type="text" class="form-control" name="totalPrice" value="<%= receipt.totalPrice %>" readonly>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="label label-default" for="status">Trạng thái</label>
+                <input type="text" class="form-control" name="status" value="<%= receipt.status %>" readonly>
+            </div>
+            <div class="form-group col-sm-12"></div>
+            <div class="form-group col-sm-2">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+    </form>
+</div>
+
+<% if (errors.length > 0) { %>
+    <div class="modal show" id="receiptModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" onclick = "$('#receiptModal').removeClass('show').addClass('fade');">&times;</button>
+                <h4 class="modal-title">Validate!!!</h4>
+            </div>
+            <div class="modal-body">
+                <% for(let i=0; i < errors.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= errors[i] %>
+                    </div>
+                <% } %>
+            </div>
+            <div class="modal-footer">        
+            </div>
+        </div>
+    </div>
+<% } %>
+
+    

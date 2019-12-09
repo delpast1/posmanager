@@ -1,0 +1,23 @@
+
+<div class="container dashboard-content">
+    <form action="/admin/unit/update-unit/" method="POST" class="form-default" role="form">
+        <div class="form-group col-sm-12">
+            <label class="label label-default" for="_id">_id</label>
+            <input type="text" class="form-control" name="_id" value="<%= unit._id %>" readonly>
+        </div>
+        <div class="form-group col-sm-6">
+            <label class="label label-default" for="name">Tên</label>
+            <input type="text" class="form-control" name="name" placeholder="Nhập tên đơn vị" value="<%= unit.name %>">
+        </div>
+        <div class="form-group col-sm-6">
+            <label class="label label-default" for="symbol">Ký hiệu</label>
+            <input type="text" class="form-control" name="symbol" placeholder="Nhập ký hiệu đơn vị" value="<%= unit.symbol %>">
+        </div>
+        <div class="form-group col-sm-2">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+        <div class="form-group col-sm-2">
+            <a href="/admin/unit/delete-unit/<%= unit._id %>" class="btn btn-warning">Xóa</a>
+        </div>
+    </form>
+</div>
