@@ -293,7 +293,12 @@ var getListOfVariations = (request, callback) => {
             for(let j=0; j < products[i].variations.length; j++) {
                 let variation = {
                     variationID: products[i].variations[j]._id,
-                    productID: products[i]._id
+                    productID: products[i]._id,
+                    size: products[i].variations[j].size,
+                    color: products[i].variations[j].color,
+                    numberOfUnits: products[i].variations[j].numberOfUnits,
+                    costPrice: products[i].info.costPrice,
+                    retailPrice: products[i].info.retailPrice,
                 }
                 response.push(variation);
             }
