@@ -10,8 +10,8 @@ var login = (req,res) => {
     var request = {
         email: req.body.email
     };
-    //reponse chính là user trong hàm callback return từ module
-    mUser.login(request, (err, reponse) => {
+    //response chính là user trong hàm callback return từ module
+    mUser.login(request, (err, response) => {
         let token = '',
             status = {},
             data = {};
