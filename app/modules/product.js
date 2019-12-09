@@ -282,6 +282,26 @@ var getVariationsOfProduct = (request, callback) => {
     });
 }
 
+var getListOfVariations = (request, callback) => {
+    let cb = callback || noop,
+        req = request || {},
+        response = [];
+    
+    Product.find({'userID': req.userID}, (err, products) => {
+        if (err) return cb(err);
+        for(let i=0; i< products.length; i++) {
+            for(let j=0; j < products[i].variations.length; j++) {
+                let variation = {
+                    variationID: products[i].variations[j]._id,
+                    productID: products[i]._id
+                }
+                response.push(variation);
+            }
+        }
+        return cb(null, response);
+    });
+}
+
 var addVariation = (request, callback) => {
     let cb = callback || noop,
         req = request || {};
@@ -447,6 +467,7 @@ exports = module.exports = {
     updateProduct: updateProduct,
     removeProduct: removeProduct,
     getVariationsOfProduct: getVariationsOfProduct,
+    getListOfVariations: getListOfVariations,
     addVariation: addVariation,
     updateVariation: updateVariation,
     removeVariation: removeVariation,

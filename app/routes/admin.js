@@ -13,6 +13,9 @@ router.post('/login', controllers.admin.login);
 router.get('/logout', [requireSessionAdmin, controllers.admin.logOut]);
 // Hiển thị trang quản lý
 router.get('/dashboard', [requireSessionAdmin, controllers.admin.dashboard]);
+// Hiển thị danh sách toàn bộ sản phẩm
+router.get('/all-products', [requireSessionAdmin, controllers.admin.allProducts]);
+router.get('/all-products/:page', [requireSessionAdmin, controllers.admin.allProducts]);
 
 
 /* --------------USER-------------- */

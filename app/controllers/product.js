@@ -264,6 +264,35 @@ var getVariationsOfProduct = (req, res) => {
     });
 }
 
+var getListOfVariations = (req, res) => {
+    let request = {
+        userID: req.decoded.userID
+    };
+    mProduct.getListOfVariations(request, (err, response) => {
+        let status = {},
+            data = {};
+        if (!err && response) {
+            status = {
+                'code': '1',
+                'err': ''
+            }
+            data = response;
+            res.json({
+                body: data,
+                status: status
+            });
+        } else {
+            status = {
+                'code': '0',
+                'message': err
+            }
+            res.json({
+                status: status
+            });
+        }
+    });
+}
+
 var addVariation = (req, res) => {
     let request = {
         userID: req.decoded.userID,
@@ -373,6 +402,7 @@ exports = module.exports = {
     updateProduct: updateProduct,
     removeProduct: removeProduct,
     getVariationsOfProduct: getVariationsOfProduct,
+    getListOfVariations: getListOfVariations,
     addVariation: addVariation,
     updateVariation: updateVariation,
     removeVariation: removeVariation

@@ -45,6 +45,7 @@ router.post('/product/add', [requireSession, controllers.product.addProduct]);
 router.post('/product/update', [requireSession, controllers.product.updateProduct]);
 router.post('/product/remove', [requireSession, controllers.product.removeProduct]);
 router.post('/product/get-variations', [requireSession, controllers.product.getVariationsOfProduct]);
+router.post('/product/all-variations', [requireSession, controllers.product.getListOfVariations]);
 router.post('/product/add-variation', [requireSession, controllers.product.addVariation]);
 router.post('/product/update-variation', [requireSession, controllers.product.updateVariation]);
 router.post('/product/remove-variation', [requireSession, controllers.product.removeVariation]);

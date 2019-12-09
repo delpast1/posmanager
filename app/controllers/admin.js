@@ -182,6 +182,7 @@ var choseUser = (req, res) => {
 var showUserGeneralInfo = (req,res) => {
     if (req.session.userID) {
         User.findById(req.session.userID, (err, user) => {
+            req.session.email = user.info.email;
             res.render('pages/dashboard', {
                 page: 'userGeneralInfo',
                 user: user
@@ -194,79 +195,95 @@ var showUserGeneralInfo = (req,res) => {
     }
 }
 
-// var unitsPage = (req, res) => {
-//     let perPage = 7 ;
-//     let page = req.params.page || 1;
+var allProducts = (req, res) => {
+    let perPage = 7 ;
+    let page = req.params.page || 1;
+    const check_id = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
+    let errors = [];
 
-//     if (req.session.userID) {
-//         if (req.query.unitSearch) {      
-//             let query = new RegExp(req.query.unitSearch, 'i');
-//             Unit.find({$or: [{'name': query}, {'symbol': query}], 'userID': req.session.userID }).skip((perPage * page) - perPage)
-//             .limit(perPage).exec( (err, units) => {
-//                 if (err) throw err;
-//                 Unit.countDocuments({$or: [{'name': query}, {'symbol': query}], 'userID': req.session.userID }).exec((err, count) => {
-//                     res.render('pages/dashboard', {
-//                         page: 'unitManage',
-//                         units: units,
-//                         current: page,
-//                         pages: Math.ceil(count/perPage)
-//                     });
-//                 });
-//             });
-//         } else {
-//             Unit.find({'userID': req.session.userID}).skip((perPage * page) - perPage)
-//             .limit(perPage).exec( (err, units) => {
-//                 if (err) throw err;
-//                 Unit.countDocuments({'userID': req.session.userID}).exec((err, count) => {
-//                     res.render('pages/dashboard', {
-//                         page: 'unitManage',
-//                         units: units,
-//                         current: page,
-//                         pages: Math.ceil(count/perPage)
-//                     });
-//                 });
-//             });
-//         }
-//     } else {
-//         res.render('pages/dashboard', {
-//             page: 'noresult'
-//         });
-//     }
-// };
+    let workflow = new (require('events').EventEmitter)();
 
-// var getUnit = (req, res) => {
-//     let errors = [];
-//     Unit.findById(req.params.id, (err, unit) => {
-//         if (err) throw err;
-//         res.render('pages/dashboard', {
-//             page: 'unit',
-//             errors: errors,
-//             unit: unit
-//         });
-//     });
-// }
+    workflow.on('validateParams', () => { 
+        if (req.query.idSearch) {
+            if (!check_id.test(req.query.idSearch)) {
+                errors.push('_id không hợp lệ.');
+            }
+        }
+        if (errors.length > 0) {
+            Product.find().skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, products) => {
+                if (err) throw err;
+                Product.countDocuments().exec((err, count) => {
+                    res.render('pages/dashboard', {
+                        page: 'allProducts',
+                        products: products,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            workflow.emit('next', errors);
+        }
+    });
 
-// var updateUnit = (req, res) => {
-//     let errors = [];
-//     Unit.findByIdAndUpdate(req.body._id, {
-//         name: req.body.name,
-//         symbol: req.body.symbol
-//     }, { new: true}, (err, updatedUnit) => {
-//         if (err) throw err;
-//         res.render('pages/dashboard', {
-//             page: 'unit',
-//             errors: errors,
-//             unit: updatedUnit
-//         });
-//     });
-// };
+    workflow.on('next', (errors) => {
+        if (req.query.idSearch) {       
+            Product.find({'_id': req.query.idSearch}).skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, products) => {
+                if (err) throw err;
+                Product.countDocuments({'_id': req.query.idSearch}).exec((err, count) => {
+                    if (err) throw err;
+                    res.render('pages/dashboard', {
+                        page: 'allProducts',
+                        products: products,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            if (req.query.productSearch) { 
+                let query = new RegExp(req.query.productSearch, 'i');       
+                Product.find({$or: [{'info.SKU': query}, {'info.name': query}]}).skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, products) => {
+                    if (err) throw err;
+                    Product.countDocuments({$or: [{'info.SKU': query}, {'info.name': query}]}).exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allProducts',
+                            products: products,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            } else {
+                Product.find().skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, products) => {
+                    if (err) throw err;
+                    Product.countDocuments().exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allProducts',
+                            products: products,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            }
+        }
+    })
 
-// var deleteUnit = (req, res) => {
-//     Unit.deleteOne({_id: req.params.id}, (err) => {
-//         if (err) throw err;
-//         res.redirect('/admin/unit/all-units/');
-//     });
-// };
+    workflow.emit('validateParams');
+}
 
 var productsPage = (req, res) => {
     let perPage = 7 ;
@@ -292,7 +309,8 @@ var productsPage = (req, res) => {
                             products: products,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -313,7 +331,8 @@ var productsPage = (req, res) => {
                             products: products,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -329,7 +348,8 @@ var productsPage = (req, res) => {
                                 products: products,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -343,7 +363,8 @@ var productsPage = (req, res) => {
                                 products: products,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -501,7 +522,8 @@ var ordersPage = (req, res) => {
                             orders: orders,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -522,7 +544,8 @@ var ordersPage = (req, res) => {
                             orders: orders,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -538,7 +561,8 @@ var ordersPage = (req, res) => {
                                 orders: orders,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -552,7 +576,8 @@ var ordersPage = (req, res) => {
                                 orders: orders,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -642,7 +667,8 @@ var receiptPage = (req, res) => {
                             receipts: receipts,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -663,7 +689,8 @@ var receiptPage = (req, res) => {
                             receipts: receipts,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -678,7 +705,8 @@ var receiptPage = (req, res) => {
                                 receipts: receipts,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -692,7 +720,8 @@ var receiptPage = (req, res) => {
                                 receipts: receipts,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -767,7 +796,8 @@ var partnerPage = (req, res) => {
                             partners: partners,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -788,7 +818,8 @@ var partnerPage = (req, res) => {
                             partners: partners,
                             current: page,
                             pages: Math.ceil(count/perPage),
-                            errors: errors
+                            errors: errors,
+                            email: req.session.email
                         });
                     });
                 });
@@ -804,7 +835,8 @@ var partnerPage = (req, res) => {
                                 partners: partners,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -818,7 +850,8 @@ var partnerPage = (req, res) => {
                                 partners: partners,
                                 current: page,
                                 pages: Math.ceil(count/perPage),
-                                errors: errors
+                                errors: errors,
+                                email: req.session.email
                             });
                         });
                     });
@@ -939,4 +972,5 @@ exports = module.exports = {
     getPartner: getPartner,
     updatePartner: updatePartner,
     deletePartner: deletePartner,
+    allProducts: allProducts
 }
