@@ -1,11 +1,11 @@
-<h1>Danh sách tất cả đơn hàng</h1>
+<h1>Danh sách tất cả đơn nhập hàng trong hệ thống</h1>
 <div class="container dashboard-content">
-    <form action="/admin/order/all-orders/" method="GET">
+    <form action="/admin/all-receipts/" method="GET">
         <div class="col-sm-5">
-            <input type="text" class="form-control" name="orderSearch" placeholder="Nhập tên của khách hàng">
+            <input type="text" class="form-control" name="receiptSearch" placeholder="Nhập id của đơn nhập hàng">
         </div>
         <div class="col-sm-5">
-            <input type="text" class="form-control" name="idSearch" placeholder="Nhập id của đơn hàng">
+            <input type="text" class="form-control" name="supplierSearch" placeholder="Nhập id của nhà cung cấp">
         </div>
         <span class="input-group-btn col-sm-2">
             <button type="submit" class="btn btn-default">Go!</button>
@@ -16,29 +16,27 @@
             <thead>
                 <tr>
                     <th class="col-sm-2">Ngày</th>
-                    <th class="col-sm-2">ID đơn hàng</th>
-                    <th class="col-sm-2">Tên khách hàng</th>
+                    <th class="col-sm-2">ID đơn nhập hàng</th>
+                    <th class="col-sm-2">ID Nhà cung cấp</th>
                     <th class="col-sm-1">Tổng tiền</th>
-                    <th class="col-sm-2">Phương thức giao hàng</th>
-                    <th class="col-sm-2">Phương thức thanh toán</th>
                     <th class="col-sm-1">Trạng thái</th>
-                    <th class="col-sm-1"></th>
+                    <th class="col-sm-2"></th>
+                    <th class="col-sm-2"></th>
                 </tr>
             </thead>
             <tbody>
                 <% 
-                    if (orders.length > 0 ) {
-                        for(var i=0; i < orders.length; i++ )  {
+                    if (receipts.length > 0 ) {
+                        for(var i=0; i < receipts.length; i++ )  {
                 %>
                 <tr>
-                    <td class="col-sm-1"><%= orders[i].createdAt %></td>
-                    <td class="col-sm-2"><%= orders[i]._id %></td>
-                    <td class="col-sm-2"><%= orders[i].customerInfo.customerName %></td>
-                    <td class="col-sm-1"><%= orders[i].totalPrice %></td>
-                    <td class="col-sm-2"><%= orders[i].deliveryMethod.deliveryType %></td>
-                    <td class="col-sm-2"><%= orders[i].paymentMethod %></td>
-                    <td class="col-sm-1"><%= orders[i].status %></td>
-                    <td class="col-sm-1"><a href="/admin/order/get-order/<%= orders[i]._id %>" class="btn btn-info">Xem</a></td>
+                    <td class="col-sm-2"><%= receipts[i].createdAt %></td>
+                    <td class="col-sm-2"><%= receipts[i]._id %></td>
+                    <td class="col-sm-2"><%= receipts[i].supplierID %></td>
+                    <td class="col-sm-1"><%= receipts[i].totalPrice %></td>
+                    <td class="col-sm-1"><%= receipts[i].status %></td>
+                    <td class="col-sm-2"><a href="/admin/get-receipt/<%= receipts[i]._id %>" class="btn btn-info">Xem</a></td>
+                    <td class="col-sm-2"></td>
                 </tr>
                 <%}}%>
             </tbody>
@@ -53,16 +51,16 @@
             <% if (Number(current) === 1) { %>
                 <li class="active"><a>1</a></li>
             <% } else { %>
-                <li><a href="/admin/all-orders/1">1</a></li>
+                <li><a href="/admin/all-receipts/1">1</a></li>
             <% } %>
             <% var x = (Number(current) > 5 ? Number(current) - 2 : 2) %>
             <% if (Number(current) > 3) { %>
                 <li class="disabled"><a>...</a></li>
                 <% for (x=x+1; x <= (Number(current) + 1) && x < pages; x++) { %>
                     <% if (x === Number(current)) { %>
-                        <li class="active"><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li class="active"><a href="/admin/all-receipts/<%= x %>"><%= x %></a></li>
                     <% } else { %>    
-                        <li><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li><a href="/admin/all-receipts/<%= x %>"><%= x %></a></li>
                     <% } %>
                     <% if (x === Number(current) + 1 && x < pages) { %>
                         <li class="disabled"><a>...</a></li>
@@ -71,9 +69,9 @@
             <% }  else { %>
                 <% for (; x <= (Number(current) + 1) && x < pages; x++) { %>
                     <% if (x === Number(current)) { %>
-                        <li class="active"><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li class="active"><a href="/admin/all-receipts/<%= x %>"><%= x %></a></li>
                     <% } else { %>    
-                        <li><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li><a href="/admin/all-receipts/<%= x %>"><%= x %></a></li>
                     <% } %>
                     <% if (x === Number(current) + 1 && x < pages && pages > 3) { %>
                         <li class="disabled"><a>...</a></li>
@@ -84,7 +82,7 @@
             <% if (Number(current) === pages) { %>
                 <li class="active"><a><%= pages %></a></li>
             <% } else { %>
-                <li><a href="/admin/all-orders/<%= pages %>"><%= pages %></a></li>
+                <li><a href="/admin/all-receipts/<%= pages %>"><%= pages %></a></li>
             <% } %>
         </ul>
     <% } %>

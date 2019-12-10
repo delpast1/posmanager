@@ -1,6 +1,6 @@
-<h1>Danh sách tất cả đơn hàng</h1>
+<h1>Danh sách tất cả đơn hàng trong hệ thống</h1>
 <div class="container dashboard-content">
-    <form action="/admin/order/all-orders/" method="GET">
+    <form action="/admin/all-orders/" method="GET">
         <div class="col-sm-5">
             <input type="text" class="form-control" name="orderSearch" placeholder="Nhập tên của khách hàng">
         </div>
@@ -53,16 +53,16 @@
             <% if (Number(current) === 1) { %>
                 <li class="active"><a>1</a></li>
             <% } else { %>
-                <li><a href="/admin/all-orders/1">1</a></li>
+                <li><a href="/admin/order/all-orders/1">1</a></li>
             <% } %>
             <% var x = (Number(current) > 5 ? Number(current) - 2 : 2) %>
             <% if (Number(current) > 3) { %>
                 <li class="disabled"><a>...</a></li>
                 <% for (x=x+1; x <= (Number(current) + 1) && x < pages; x++) { %>
                     <% if (x === Number(current)) { %>
-                        <li class="active"><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li class="active"><a href="/admin/order/all-orders/<%= x %>"><%= x %></a></li>
                     <% } else { %>    
-                        <li><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li><a href="/admin/order/all-orders/<%= x %>"><%= x %></a></li>
                     <% } %>
                     <% if (x === Number(current) + 1 && x < pages) { %>
                         <li class="disabled"><a>...</a></li>
@@ -71,9 +71,9 @@
             <% }  else { %>
                 <% for (; x <= (Number(current) + 1) && x < pages; x++) { %>
                     <% if (x === Number(current)) { %>
-                        <li class="active"><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li class="active"><a href="/admin/order/all-orders/<%= x %>"><%= x %></a></li>
                     <% } else { %>    
-                        <li><a href="/admin/all-orders/<%= x %>"><%= x %></a></li>
+                        <li><a href="/admin/order/all-orders/<%= x %>"><%= x %></a></li>
                     <% } %>
                     <% if (x === Number(current) + 1 && x < pages && pages > 3) { %>
                         <li class="disabled"><a>...</a></li>
@@ -84,7 +84,7 @@
             <% if (Number(current) === pages) { %>
                 <li class="active"><a><%= pages %></a></li>
             <% } else { %>
-                <li><a href="/admin/all-orders/<%= pages %>"><%= pages %></a></li>
+                <li><a href="/admin/order/all-orders/<%= pages %>"><%= pages %></a></li>
             <% } %>
         </ul>
     <% } %>

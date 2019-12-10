@@ -193,7 +193,7 @@ var showUserGeneralInfo = (req,res) => {
             page: 'noresult'
         });
     }
-}
+};
 
 var allProducts = (req, res) => {
     let perPage = 7 ;
@@ -271,6 +271,191 @@ var allProducts = (req, res) => {
                         res.render('pages/dashboard', {
                             page: 'allProducts',
                             products: products,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            }
+        }
+    })
+
+    workflow.emit('validateParams');
+};
+
+var allOrders = (req, res) => {
+    let perPage = 7 ;
+    let page = req.params.page || 1;
+    const check_id = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
+    let errors = [];
+
+    let workflow = new (require('events').EventEmitter)();
+
+    workflow.on('validateParams', () => { 
+        if (req.query.idSearch) {
+            if (!check_id.test(req.query.idSearch)) {
+                errors.push('_id không hợp lệ.');
+            }
+        }
+        if (errors.length > 0) {
+            Order.find().skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, orders) => {
+                if (err) throw err;
+                Order.countDocuments().exec((err, count) => {
+                    res.render('pages/dashboard', {
+                        page: 'allOrders',
+                        orders: orders,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            workflow.emit('next', errors);
+        }
+    });
+
+    workflow.on('next', (errors) => {
+        if (req.query.idSearch) {       
+            Order.find({'_id': req.query.idSearch}).skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, orders) => {
+                if (err) throw err;
+                Order.countDocuments({'_id': req.query.idSearch}).exec((err, count) => {
+                    if (err) throw err;
+                    res.render('pages/dashboard', {
+                        page: 'allOrders',
+                        orders: orders,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            if (req.query.orderSearch) { 
+                let query = new RegExp(req.query.orderSearch, 'i');       
+                Order.find({'customerInfo.customerName': query}).skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, orders) => {
+                    if (err) throw err;
+                    Order.countDocuments({'customerInfo.customerName': query}).exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allOrders',
+                            orders: orders,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            } else {
+                Order.find().skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, orders) => {
+                    if (err) throw err;
+                    Order.countDocuments().exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allOrders',
+                            orders: orders,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            }
+        }
+    })
+
+    workflow.emit('validateParams');
+};
+
+var allReceipts = (req, res) => {
+    let perPage = 7 ;
+    let page = req.params.page || 1;
+    const check_id = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
+    let errors = [];
+
+    let workflow = new (require('events').EventEmitter)();
+
+    workflow.on('validateParams', () => { 
+        if (req.query.receiptSearch) {
+            if (!check_id.test(req.query.receiptSearch)) {
+                errors.push('id đơn nhập hàng không hợp lệ.');
+            }
+        }
+
+        if (req.query.supplierSearch) {
+            if (!check_id.test(req.query.supplierSearch)) {
+                errors.push('id nhà cung cấp không hợp lệ.');
+            }
+        }
+        if (errors.length > 0) {
+            Receipt.find().skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, receipts) => {
+                if (err) throw err;
+                Receipt.countDocuments().exec((err, count) => {
+                    res.render('pages/dashboard', {
+                        page: 'allReceipt',
+                        receipts: receipts,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            workflow.emit('next', errors);
+        }
+    });
+
+    workflow.on('next', (errors) => {
+        if (req.query.receiptSearch) {       
+            Receipt.find({'_id': req.query.receiptSearch}).skip((perPage * page) - perPage)
+            .limit(perPage).exec( (err, receipts) => {
+                if (err) throw err;
+                Receipt.countDocuments({'_id': req.query.receiptSearch}).exec((err, count) => {
+                    if (err) throw err;
+                    res.render('pages/dashboard', {
+                        page: 'allReceipt',
+                        receipts: receipts,
+                        current: page,
+                        pages: Math.ceil(count/perPage),
+                        errors: errors,
+                        email: req.session.email
+                    });
+                });
+            });
+        } else {
+            if (req.query.supplierSearch) {     
+                Receipt.find({'supplierID': req.query.supplierSearch}).skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, receipts) => {
+                    if (err) throw err;
+                    Receipt.countDocuments({'supplierID': req.query.supplierSearch}).exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allReceipt',
+                            receipts: receipts,
+                            current: page,
+                            pages: Math.ceil(count/perPage),
+                            errors: errors,
+                            email: req.session.email
+                        });
+                    });
+                });
+            } else {
+                Receipt.find().skip((perPage * page) - perPage)
+                .limit(perPage).exec( (err, receipts) => {
+                    if (err) throw err;
+                    Receipt.countDocuments().exec((err, count) => {
+                        res.render('pages/dashboard', {
+                            page: 'allReceipt',
+                            receipts: receipts,
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
@@ -378,7 +563,7 @@ var productsPage = (req, res) => {
             page: 'noresult'
         });
     }
-}
+};
 
 var getProduct = (req, res) => {
     let errors = [];
@@ -972,5 +1157,7 @@ exports = module.exports = {
     getPartner: getPartner,
     updatePartner: updatePartner,
     deletePartner: deletePartner,
-    allProducts: allProducts
+    allProducts: allProducts,
+    allOrders: allOrders,
+    allReceipts: allReceipts
 }

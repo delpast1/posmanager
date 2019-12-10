@@ -16,6 +16,12 @@ router.get('/dashboard', [requireSessionAdmin, controllers.admin.dashboard]);
 // Hiển thị danh sách toàn bộ sản phẩm
 router.get('/all-products', [requireSessionAdmin, controllers.admin.allProducts]);
 router.get('/all-products/:page', [requireSessionAdmin, controllers.admin.allProducts]);
+// Hiển thị danh sách toàn bộ đơn hàng
+router.get('/all-orders', [requireSessionAdmin, controllers.admin.allOrders]);
+router.get('/all-orders/:page', [requireSessionAdmin, controllers.admin.allOrders]);
+// Hiển thị danh sách toàn bộ đơn nhập hàng
+router.get('/all-receipts', [requireSessionAdmin, controllers.admin.allReceipts]);
+router.get('/all-receipts/:page', [requireSessionAdmin, controllers.admin.allReceipts]);
 
 
 /* --------------USER-------------- */
