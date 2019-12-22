@@ -1,0 +1,72 @@
+<div class="hidden" id="months"><%= locals.months %></div>
+<div class="hidden" id="revenues"><%= locals.revenues %></div>
+<div class="hidden" id="costs"><%= locals.costs %></div>
+
+<div id="chart1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script>
+    $(function () {
+        var stringMonths = document.getElementById("months").innerHTML;
+        var stringRevenues = document.getElementById("revenues").innerHTML;
+        var stringCosts = document.getElementById("costs").innerHTML;
+        
+        var arrayMonths = stringMonths.split(',');
+        var arrayRevenues = stringRevenues.split(',');
+        var arrayCosts = stringCosts.split(',');
+
+
+        for (let i=0; i< arrayRevenues.length; i++) {
+            arrayRevenues[i] = Number(arrayRevenues[i]);
+        }
+        for (let i=0; i< arrayCosts.length; i++) {
+            arrayCosts[i] = Number(arrayCosts[i]);
+        }
+
+        Highcharts.chart('chart1', {
+            chart: {
+                type: 'column'
+            },  
+            title: {
+                text: 'Biểu đồ tình hình kinh doanh trong vòng 12 tháng',
+            },
+            xAxis: {
+                categories: arrayMonths,
+                crosshair: true
+            },
+            yAxis: {
+                title: {
+                    text: 'Đồng (VNĐ)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} đ</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: 'Doanh thu',
+                    data: arrayRevenues
+                },
+                {
+                    name: 'Vốn nhập hàng',
+                    data: arrayCosts
+                }
+            ]
+        });
+    });
+    </script>

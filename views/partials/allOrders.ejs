@@ -31,7 +31,7 @@
                         for(var i=0; i < orders.length; i++ )  {
                 %>
                 <tr>
-                    <td class="col-sm-1"><%= orders[i].createdAt %></td>
+                    <td class="col-sm-1"><%= moment(orders[i].createdAt).format( 'DD/MM/YYYY') %></td>
                     <td class="col-sm-2"><%= orders[i]._id %></td>
                     <td class="col-sm-2"><%= orders[i].customerInfo.customerName %></td>
                     <td class="col-sm-1"><%= orders[i].totalPrice %></td>
@@ -91,7 +91,7 @@
 </div>
 
 <% if (errors.length > 0) { %>
-    <div class="modal show" id="receiptModal" role="dialog">
+    <div class="modal show" id="errorModal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-header">

@@ -5,6 +5,7 @@ const requireSessionAdmin = require('../config/requireSession').requireSessionAd
 
 /* Admin Router*/
 router.get('/create', controllers.admin.createAdmin);
+router.get('/test', controllers.admin.generalReport);
 
 /* --------------ADMIN-------------- */
 // Đăng nhập
@@ -24,6 +25,7 @@ router.get('/all-receipts', [requireSessionAdmin, controllers.admin.allReceipts]
 router.get('/all-receipts/:page', [requireSessionAdmin, controllers.admin.allReceipts]);
 
 
+
 /* --------------USER-------------- */
 // Phân trang Users
 router.get('/all-users/', [requireSessionAdmin, controllers.admin.usersPage]);
@@ -36,6 +38,8 @@ router.get('/user-active/:id', [requireSessionAdmin, controllers.admin.userActiv
 router.get('/chose-user/:id', [requireSessionAdmin, controllers.admin.choseUser]);
 // Hiện thông tin chung của người dùng
 router.get('/user/general-info', [requireSessionAdmin, controllers.admin.showUserGeneralInfo]);
+// Báo cáo doanh thu của người dùng
+router.get('/user/general-report', [requireSessionAdmin, controllers.admin.generalReport]);
 
 // /* -----------UNIT------------- */
 // // Phân trang danh sách đơn vị tính của user

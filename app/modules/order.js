@@ -148,8 +148,8 @@ var updateOrderStatus = (request, callback) => {
                 if (err) {
                     return cb(err);
                 }
-                if (order.status === 'CANCELED') {
-                    errors.push('Không thể thay đổi trạng thái đơn hàng bị hủy.');
+                if (order.status === 'COMPLETED') {
+                    errors.push('Không thể thay đổi trạng thái đơn hàng đã hoàn thành.');
                     return cb(errors);
                 } else {
                     for(let i=0; i<order.products.length; i++) {

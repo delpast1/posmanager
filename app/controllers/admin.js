@@ -12,6 +12,7 @@ const session = require('express-session');
 const secretKeyAdmin = require('../config/config').adminSecret;
 const escapeRegex = require('../helpers/regex-escape');
 const ejs = require('ejs');
+const moment = require('moment');
 
 var createAdmin = (req,res) => {
     mAdmin.createAdmin(req, (err, response) => {
@@ -37,6 +38,8 @@ var login = (req,res) => {
     mAdmin.login(request, (err, response) => {
         let token = '',
             data = {};
+        // req.session.months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+        // 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
         if (!err && response) {
             let signresponse = {
                 username: response.username
@@ -46,7 +49,7 @@ var login = (req,res) => {
             });
 
             req.session.token = token;
-            res.redirect('/admin/dashboard');
+            res.redirect('/admin/all-users');
         } else {
             res.render('pages/index',{
                 page: 'login',
@@ -61,6 +64,7 @@ var checkToken = (req, res) => {
 };
 
 var dashboard = (req, res) => {
+    // res.locals.months = req.session.months;
     res.render('pages/dashboard', {page: 'dashboard'});
 }
 
@@ -310,7 +314,8 @@ var allOrders = (req, res) => {
                         current: page,
                         pages: Math.ceil(count/perPage),
                         errors: errors,
-                        email: req.session.email
+                        email: req.session.email,
+                        moment: moment
                     });
                 });
             });
@@ -332,7 +337,8 @@ var allOrders = (req, res) => {
                         current: page,
                         pages: Math.ceil(count/perPage),
                         errors: errors,
-                        email: req.session.email
+                        email: req.session.email,
+                        moment: moment
                     });
                 });
             });
@@ -349,7 +355,8 @@ var allOrders = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -364,7 +371,8 @@ var allOrders = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -406,7 +414,8 @@ var allReceipts = (req, res) => {
                         current: page,
                         pages: Math.ceil(count/perPage),
                         errors: errors,
-                        email: req.session.email
+                        email: req.session.email,
+                        moment: moment
                     });
                 });
             });
@@ -428,7 +437,8 @@ var allReceipts = (req, res) => {
                         current: page,
                         pages: Math.ceil(count/perPage),
                         errors: errors,
-                        email: req.session.email
+                        email: req.session.email,
+                        moment: moment
                     });
                 });
             });
@@ -444,7 +454,8 @@ var allReceipts = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -459,7 +470,8 @@ var allReceipts = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -708,7 +720,8 @@ var ordersPage = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -730,7 +743,8 @@ var ordersPage = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -747,7 +761,8 @@ var ordersPage = (req, res) => {
                                 current: page,
                                 pages: Math.ceil(count/perPage),
                                 errors: errors,
-                                email: req.session.email
+                                email: req.session.email,
+                                moment: moment
                             });
                         });
                     });
@@ -762,7 +777,8 @@ var ordersPage = (req, res) => {
                                 current: page,
                                 pages: Math.ceil(count/perPage),
                                 errors: errors,
-                                email: req.session.email
+                                email: req.session.email,
+                                moment: moment
                             });
                         });
                     });
@@ -875,7 +891,8 @@ var receiptPage = (req, res) => {
                             current: page,
                             pages: Math.ceil(count/perPage),
                             errors: errors,
-                            email: req.session.email
+                            email: req.session.email,
+                            moment: moment
                         });
                     });
                 });
@@ -891,7 +908,8 @@ var receiptPage = (req, res) => {
                                 current: page,
                                 pages: Math.ceil(count/perPage),
                                 errors: errors,
-                                email: req.session.email
+                                email: req.session.email,
+                                moment: moment
                             });
                         });
                     });
@@ -906,7 +924,8 @@ var receiptPage = (req, res) => {
                                 current: page,
                                 pages: Math.ceil(count/perPage),
                                 errors: errors,
-                                email: req.session.email
+                                email: req.session.email,
+                                moment: moment
                             });
                         });
                     });
@@ -1125,6 +1144,61 @@ var deletePartner = (req, res) => {
     });
 }
 
+var generalReport = async (req, res) => {
+    if (req.session.userID) {
+        let monthNames = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+        let months = [];
+        let revenues = [];
+        let costs = [];
+        let today = new Date();
+        let d;
+        let month, year, time;
+
+        for(let i = 11; i >= 0; i -= 1) {
+            d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            month = monthNames[d.getMonth()];
+            year = d.getFullYear();
+            time = month+ "/" + year;
+            months.push(time);
+            
+
+            let start = new Date(Number(year), Number(month)-1, 1);
+            let end = new Date(Number(year), Number(month), 2);
+            await Order.find({'userID': req.session.userID, createdAt : { '$gte': start, '$lte': end }}, (err, orders) => {
+                let revenue = 0;
+                if (err)  throw err;
+                for(let i=0; i < orders.length; i++) {
+                    if (orders[i].status === "COMPLETED") {
+                        revenue += Number(orders[i].totalPrice);
+                    }
+                }
+                revenues.push(revenue);
+            });
+
+            await Receipt.find({'userID': req.session.userID, createdAt : { '$gte': start, '$lte': end }}, (err, receipts) => {
+                let costReceipt = 0;
+                if (err) throw err;
+                for(let i=0; i < receipts.length; i++) {
+                    if (receipts[i].status === 'FINISHED') {
+                        costReceipt += Number(receipts[i].totalPrice);
+                    }
+                }
+                costs.push(costReceipt);
+            });
+        }
+        res.locals.months = months;
+        res.locals.revenues = revenues;
+        res.locals.costs = costs;
+        res.render('pages/dashboard', {
+            page: 'report'
+        });
+    } else {
+        res.render('pages/dashboard', {
+            page: 'noresult'
+        });
+    }
+}
+
 exports = module.exports = {
     login: login,
     checkToken: checkToken,
@@ -1159,5 +1233,7 @@ exports = module.exports = {
     deletePartner: deletePartner,
     allProducts: allProducts,
     allOrders: allOrders,
-    allReceipts: allReceipts
+    allReceipts: allReceipts,
+
+    generalReport: generalReport
 }
