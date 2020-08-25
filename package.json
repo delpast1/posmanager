@@ -13,7 +13,7 @@
     "email-validator": "^2.0.4",
     "express": "~4.16.1",
     "express-session": "^1.17.0",
-    "highcharts": "^8.0.0",
+    "highcharts": "^8.1.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
