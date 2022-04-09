@@ -16,7 +16,7 @@
     "highcharts": "^8.0.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.6.6",
     "morgan": "~1.9.1",
     "nodemon": "^1.19.4",
